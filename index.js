@@ -12,10 +12,10 @@ app.use(cors())
 
 app.use(express.static("client"));
 
-const xmlRouter = require('./routes/xml')
-app.use('/api/xml', xmlRouter)
+const xmlRouter = require('./routes/script')
+app.use('/api/script', xmlRouter)
 
-const port = process.env.PORT || 3000
+const port = 3000
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
