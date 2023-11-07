@@ -98,12 +98,16 @@ class Book {
   }
 
   show() {
-    console.log(`book: ${this.book_name}`);
+    var ansToDisplay="";
+    //console.log(`book: ${this.book_name}\n`);
+    ansToDisplay+=`book: ${this.book_name}\n\n`;
     var buy = "Buy";
     var c = "--";
     var sell = "Sell";
-    console.log(`${buy.padStart(15)}${"  " + c + "  "}${sell.padEnd(9)}`);
-    console.log("====================================");
+    // console.log(`${buy.padStart(15)}${"  " + c + "  "}${sell.padEnd(9)}`);
+    // console.log("====================================");
+    ansToDisplay+=`${buy.padStart(15)}${"  " + c + "  "}${sell.padEnd(9)}\n`;
+    ansToDisplay+="====================================\n";
 
     var sells = [];
     var buys = [];
@@ -143,15 +147,20 @@ class Book {
       var c = i < buys.length ? "--" : "";
       var sell =
         i < sells.length ? `${sells[i][0]}@${sells[i][1].toFixed(2)}` : "";
-      console.log(`${buy.padStart(15)}${"  " + c + "  "}${sell.padStart(9)}`);
+      //console.log(`${buy.padStart(15)}${"  " + c + "  "}${sell.padStart(9)}`);
+      ansToDisplay+=`${buy.padStart(15)}${"  " + c + "  "}${sell.padStart(9)}\n`;
     }
+
+    return ansToDisplay
   }
 }
 
 router.post("/", upload.single("XML"), async (req, res) => {
   try {
+    var ansToReturn=""
     var start_time = new Date();
-    console.log(`\nProcessing started at: ${start_time}\n`);
+    //console.log(`\nProcessing started at: ${start_time}\n`);
+    ansToReturn+=`\nProcessing started at: ${start_time}\n`;
 
     var xmlData = req.file.buffer;
     var options = { compact: false };
@@ -185,19 +194,24 @@ router.post("/", upload.single("XML"), async (req, res) => {
     var sorted_books_names = Object.keys(books).sort();
 
     for (var book_name of sorted_books_names) {
-      books[book_name].show();
-      console.log();
+      //books[book_name].show();
+      ansToReturn+='\n'
+      ansToReturn+=books[book_name].show();
+      ansToReturn+='\n'
+      // console.log();
     }
 
     var completion_time = new Date();
     var duration = (completion_time - start_time) / 1000; // Duration in seconds
 
-    console.log(`Processing completed at: ${completion_time}`);
-    console.log(`Processing Duration: ${duration} seconds\n`);
+    // console.log(`Processing completed at: ${completion_time}`);
+    // console.log(`Processing Duration: ${duration} seconds\n`);
+    ansToReturn+=`Processing completed at: ${completion_time}\n`;
+    ansToReturn+=`Processing Duration: ${duration} seconds\n\n`;
 
     res.status(200).json({
       status: 200,
-      message: "Success",
+      message: ansToReturn,
     });
   } catch (error) {
     console.log(error);
